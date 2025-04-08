@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query"
 import { supabase } from "../lib/supabase"
 
 // Type for query options
-type UseSupabaseQueryOptions<T> = {
+type UseSupabaseQueryOptions = {
 	table: string
 	columns?: string
 	filter?: {
@@ -21,15 +21,15 @@ type UseSupabaseQueryOptions<T> = {
 /**
  * A custom hook for fetching data from Supabase using TanStack Query
  */
-export const useSupabaseQuery = <T>({
+export const useSupabaseQuery = ({
 	table,
 	columns = "*",
 	filter = [],
 	orderBy,
 	limit,
 	enabled = true,
-}: UseSupabaseQueryOptions<T>) => {
-	return useQuery<T[], Error>({
+}: UseSupabaseQueryOptions) => {
+	return useQuery({
 		queryKey: ["supabase", table, columns, filter, orderBy, limit],
 		queryFn: async () => {
 			let query = supabase.from(table).select(columns)
@@ -57,7 +57,7 @@ export const useSupabaseQuery = <T>({
 				throw new Error(`Error fetching from ${table}: ${error.message}`)
 			}
 
-			return data as T[]
+			return data
 		},
 		enabled,
 	})

@@ -4,13 +4,13 @@ import {
 	Box,
 	Card,
 	CardContent,
-	Grid,
 	Divider,
 	CircularProgress,
 	Button,
 	List,
 	ListItem,
 	ListItemText,
+	Stack,
 } from "@mui/material"
 import { useSupabaseQuery } from "../../hooks/useSupabaseQuery"
 import { useSupabaseMutation } from "../../hooks/useSupabaseMutation"
@@ -31,7 +31,7 @@ export const Home = () => {
 		isLoading,
 		isError,
 		error,
-	} = useSupabaseQuery<Post>({
+	} = useSupabaseQuery({
 		table: "posts",
 		orderBy: {
 			column: "created_at",
@@ -59,6 +59,9 @@ export const Home = () => {
 		}
 	}
 
+	// Safely cast posts data to the correct type
+	const typedPosts = Array.isArray(posts) ? (posts as unknown as Post[]) : []
+
 	return (
 		<Box component="div" sx={{ width: "100%" }}>
 			<Paper
@@ -80,83 +83,77 @@ export const Home = () => {
 			</Paper>
 
 			<Box component="section">
-				<Grid container spacing={3}>
-					<Grid item xs={12}>
-						<Card variant="outlined">
-							<CardContent>
-								<Typography variant="h2" component="h2" gutterBottom>
-									Getting Started
-								</Typography>
-								<Typography variant="body1" sx={{ mb: 3 }}>
-									Edit{" "}
-									<Box
-										component="code"
-										sx={{ px: 1, py: 0.5, bgcolor: "rgba(0, 0, 0, 0.05)", borderRadius: 1 }}>
-										src/pages/home/index.tsx
-									</Box>{" "}
-									to customize this page.
-								</Typography>
-							</CardContent>
-						</Card>
-					</Grid>
+				<Stack spacing={3} width="100%">
+					<Card variant="outlined">
+						<CardContent>
+							<Typography variant="h2" component="h2" gutterBottom>
+								Getting Started
+							</Typography>
+							<Typography variant="body1" sx={{ mb: 3 }}>
+								Edit{" "}
+								<Box
+									component="code"
+									sx={{ px: 1, py: 0.5, bgcolor: "rgba(0, 0, 0, 0.05)", borderRadius: 1 }}>
+									src/pages/home/index.tsx
+								</Box>{" "}
+								to customize this page.
+							</Typography>
+						</CardContent>
+					</Card>
 
 					{/* New Supabase data section */}
-					<Grid item xs={12} sx={{ mt: 2 }}>
-						<Card variant="outlined">
-							<CardContent>
-								<Typography variant="h2" component="h2" gutterBottom>
-									Posts from Supabase
-								</Typography>
+					<Card variant="outlined">
+						<CardContent>
+							<Typography variant="h2" component="h2" gutterBottom>
+								Posts from Supabase
+							</Typography>
 
-								{isLoading ? (
-									<Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
-										<CircularProgress />
+							{isLoading ? (
+								<Box sx={{ display: "flex", justifyContent: "center", p: 3 }}>
+									<CircularProgress />
+								</Box>
+							) : isError ? (
+								<Typography color="error">Error: {error?.message || "Failed to load posts"}</Typography>
+							) : (
+								<>
+									{typedPosts.length > 0 ? (
+										<List>
+											{typedPosts.map((post) => (
+												<ListItem key={post.id} divider>
+													<ListItemText primary={post.title} secondary={post.content} />
+												</ListItem>
+											))}
+										</List>
+									) : (
+										<Typography>No posts found. Add your first post!</Typography>
+									)}
+
+									{/* Form to add a new post */}
+									<Box sx={{ mt: 3, display: "flex", gap: 2 }}>
+										<input
+											type="text"
+											value={newTitle}
+											onChange={(e) => setNewTitle(e.target.value)}
+											placeholder="New post title"
+											style={{
+												flex: 1,
+												padding: "8px",
+												borderRadius: "4px",
+												border: "1px solid #ccc",
+											}}
+										/>
+										<Button
+											variant="contained"
+											onClick={handleAddPost}
+											disabled={addPostMutation.isPending || !newTitle.trim()}>
+											{addPostMutation.isPending ? "Adding..." : "Add Post"}
+										</Button>
 									</Box>
-								) : isError ? (
-									<Typography color="error">
-										Error: {error?.message || "Failed to load posts"}
-									</Typography>
-								) : (
-									<>
-										{posts && posts.length > 0 ? (
-											<List>
-												{posts.map((post) => (
-													<ListItem key={post.id} divider>
-														<ListItemText primary={post.title} secondary={post.content} />
-													</ListItem>
-												))}
-											</List>
-										) : (
-											<Typography>No posts found. Add your first post!</Typography>
-										)}
-
-										{/* Form to add a new post */}
-										<Box sx={{ mt: 3, display: "flex", gap: 2 }}>
-											<input
-												type="text"
-												value={newTitle}
-												onChange={(e) => setNewTitle(e.target.value)}
-												placeholder="New post title"
-												style={{
-													flex: 1,
-													padding: "8px",
-													borderRadius: "4px",
-													border: "1px solid #ccc",
-												}}
-											/>
-											<Button
-												variant="contained"
-												onClick={handleAddPost}
-												disabled={addPostMutation.isPending || !newTitle.trim()}>
-												{addPostMutation.isPending ? "Adding..." : "Add Post"}
-											</Button>
-										</Box>
-									</>
-								)}
-							</CardContent>
-						</Card>
-					</Grid>
-				</Grid>
+								</>
+							)}
+						</CardContent>
+					</Card>
+				</Stack>
 			</Box>
 		</Box>
 	)
