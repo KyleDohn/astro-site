@@ -1,8 +1,8 @@
 import { Typography, Paper, Box, Card, CardContent, Grid, Divider } from "@mui/material"
 
-function Home() {
+export const Home = () => {
 	return (
-		<Box component="div">
+		<Box component="div" sx={{ width: "100%" }}>
 			<Paper
 				elevation={0}
 				sx={{
@@ -21,7 +21,7 @@ function Home() {
 				<Divider sx={{ my: 2 }} />
 			</Paper>
 
-			<Box component="main">
+			<Box component="section">
 				<Grid container spacing={3}>
 					<Grid item xs={12}>
 						<Card variant="outlined">
@@ -34,7 +34,7 @@ function Home() {
 									<Box
 										component="code"
 										sx={{ px: 1, py: 0.5, bgcolor: "rgba(0, 0, 0, 0.05)", borderRadius: 1 }}>
-										src/components/Home.tsx
+										src/pages/home/index.tsx
 									</Box>{" "}
 									to customize this page.
 								</Typography>
@@ -46,5 +46,3 @@ function Home() {
 		</Box>
 	)
 }
-
-export default Home
