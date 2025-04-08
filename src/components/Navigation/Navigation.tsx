@@ -1,5 +1,7 @@
 import { AppBar, Toolbar, Button, Box } from "@mui/material"
 import { Link } from "@tanstack/react-router"
+import { Auth } from "../Auth"
+import { Box as MuiBox } from "@mui/material"
 
 export const Navigation = () => {
 	return (
@@ -13,6 +15,9 @@ export const Navigation = () => {
 						About
 					</Button>
 				</Box>
+				<MuiBox>
+					<Auth />
+				</MuiBox>
 			</Toolbar>
 		</AppBar>
 	)
