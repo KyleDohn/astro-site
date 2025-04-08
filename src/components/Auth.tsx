@@ -90,8 +90,7 @@ export function Auth() {
 				transformOrigin={{
 					vertical: "top",
 					horizontal: "right",
-				}}
-			>
+				}}>
 				<Box sx={{ p: 2, minWidth: 250 }}>
 					<Stack spacing={2}>
 						<Typography variant="h6">Sign In</Typography>
@@ -110,7 +109,11 @@ export function Auth() {
 							size="small"
 							fullWidth
 						/>
-						{error && <Typography color="error" variant="caption">{error}</Typography>}
+						{error && (
+							<Typography color="error" variant="caption">
+								{error}
+							</Typography>
+						)}
 						<Button variant="contained" onClick={handleSignIn} disabled={loading} fullWidth>
 							{loading ? "Signing in..." : "Sign In"}
 						</Button>
