@@ -1,14 +1,12 @@
-import { Box, Container } from "@mui/material"
-import Home from "./components/Home"
+import { Outlet } from "@tanstack/react-router"
+import MainLayout from "./layouts/MainLayout"
 import "./App.css"
 
 function App() {
 	return (
-		<Container maxWidth="lg">
-			<Box sx={{ my: 4 }}>
-				<Home />
-			</Box>
-		</Container>
+		<MainLayout>
+			<Outlet />
+		</MainLayout>
 	)
 }
 
